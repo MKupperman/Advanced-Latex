@@ -1,0 +1,29 @@
+\contentsline {section}{\numberline {1}File types}{1}{section.1}%
+\contentsline {section}{\numberline {2}The build sequence}{1}{section.2}%
+\contentsline {section}{\numberline {3}Fancy headers and footers}{2}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Formatting}{2}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Page numbering}{2}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Timestamp your document}{3}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Alternate way to include timestamps}{3}{subsection.3.4}%
+\contentsline {subsection}{\numberline {3.5}Exercises}{3}{subsection.3.5}%
+\contentsline {section}{\numberline {4}Custom commands and Macros}{3}{section.4}%
+\contentsline {subsection}{\numberline {4.1}New commands}{3}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Redefining calls}{4}{subsection.4.2}%
+\contentsline {section}{\numberline {5}The many Math Environments of \LaTeXe }{4}{section.5}%
+\contentsline {section}{\numberline {6}Theorems, lemmas, and remarks}{5}{section.6}%
+\contentsline {section}{\numberline {7}Images}{6}{section.7}%
+\contentsline {section}{\numberline {8}Figures, tables, and tabular}{8}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Figures}{8}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Tables}{9}{subsection.8.2}%
+\contentsline {section}{\numberline {9}References}{10}{section.9}%
+\contentsline {section}{\numberline {10}Abstract}{12}{section.10}%
+\contentsline {section}{\numberline {11}Including documents}{13}{section.11}%
+\contentsline {section}{\numberline {12}Including code snippets}{13}{section.12}%
+\contentsline {subsection}{\numberline {12.1}Python}{13}{subsection.12.1}%
+\contentsline {subsection}{\numberline {12.2}C}{14}{subsection.12.2}%
+\contentsline {subsection}{\numberline {12.3}Matlab}{14}{subsection.12.3}%
+\contentsline {section}{\numberline {13}Bibliographies}{16}{section.13}%
+\contentsline {subsection}{\numberline {13.1}Bibtex}{17}{subsection.13.1}%
+\contentsline {subsection}{\numberline {13.2}Biblatex}{17}{subsection.13.2}%
+\contentsline {section}{\numberline {14}SI Unit formatting}{17}{section.14}%
+\contentsline {section}{\numberline {15}External referencing}{17}{section.15}%

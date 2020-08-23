@@ -1,0 +1,576 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{matlab-prettifier}
+\usepackage{listings}
+\usepackage{siunitx}
+\usepackage{minted}
+
+\usepackage{datetime}
+%\usepackage{datetime2}  % Uncomment for datetime2 formatting, conflicts with datetime
+\usepackage{hyperref}
+\usepackage{lastpage}
+\usepackage{amsthm}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+
+\pagestyle{fancy}
+%opening
+\title{Advanced \LaTeX{} Syllabus}
+\author{OSU Math Club\\
+\href{mailto:mathclub@math.oregonstate.edu}{mathclub@math.oregonstate.edu}}
+\date{April 2020}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+The full functionality of \LaTeX in a document! This document is a practitioners guide to using \LaTeX{}, the features you should know to improve your document appearance. The table of contents is on page \ref{toc}. Included are fundamentals of what \LaTeX{} is and what is does, how to build a document, page layout, custom commands/macros, math environments, theorem environments (for theorems, lemmas, remarks, etc.), using images, references, and nesting documents (including files in your file), code snippets, bibliographies/citations with bibtex, SI units, and embedding external references. 
+\end{abstract}
+%\tableofcontents \pagebreak
+\section{File types}
+When working with \LaTeX, you'll often run across files beyond .tex files. These are
+\begin{description}
+	\item[.sty] Style files: a text file implementing packages
+	\item[.log] Log file: a file produced by the latex compiler that describes everything that the compiler did, including any reformatting, package usage, or errors generated. The end of every (successful) log file contains a description of how big the document was. 
+	\item[.aux] Auxiliary files: A temporary file generated for storing document details, includes build information: sectioning, page numbering, references, where to insert bibliographic reference numbering, etc. Aux files are passed between pdflatex and bibtex/biber/external tools and overwritten at the end of pdflatex. 
+	\item [.cls] Class files: A file specified by the argument to \textbackslash documentclass. Latex comes with a few: the most popular are article, beamer (slides), and memoir (book-like). Class files can be provided by packages or written as standalone files.
+\end{description}
+\section{The build sequence}
+What's \LaTeX{} doing? \LaTeX{} is built on a mishmash of WEB2E (a derivative of java) styled after pascal, with a C interpreter. The most common executable is not actually LaTeX which returns a type of graphic file called postscript, but pdflatex which returns a pdf. To build a document, pdflatex is called with a few arguments, the details of which are not terribly important to you. The \emph{Build Sequence} is the sequence of commands to properly build your document. LaTeX is an executed language, it doesn't handle referencing with extra files (like itself) well. To overcome this, it produces a auxilliary file (.aux) which allows information to be stored between calls. When pdflatex is called, it looks for a matching .aux file and passes that into the the compiler.  
+
+To overcome this, build sequences for complicated documents require multiple pdflatex calls. The standard build sequence is
+\begin{itemize}
+	\item pdflatex (to generate labels)
+	\item biber or bibtex (for citations)
+	\item pdflatex (to generate reference requests)
+	\item pdflatex (to match labels and citations to references)
+\end{itemize} 
+Most IDEs will automate this process for you with a build function. TeXstudio has a build-and-view (f5) and a compile (f6). If you're not working with referencing, both give the same result. If you're working with references but aren't editing them, you can do a compiler call after a build call. Overleaf hides this technical detail from you and is prepared to run a build cycle every time you push refresh.
+
+\section{Fancy headers and footers}
+\subsection{Formatting}
+The package fancyhr ("Fancy header``) provides tools to modify the header and footer.
+\begin{itemize}
+	\item First import the package with \textbackslash usepackage{fancyhdr}
+	\item Set the page style to fancy with \textbackslash pagestyle\{fancy\}
+	\item This will add a section header to each non-title page and a line to separate it from the main text.
+	\item To modify the header or footer, first identify the command.
+	\begin{itemize}
+		\item Position: left, center, or right as l, c, or r
+		\item header or footer as head or foot
+		\item Examples: \textbackslash lhead, \textbackslash rfoot, \textbackslash cfoot, \textbackslash chead
+	\end{itemize}
+
+\end{itemize}
+More examples on \href{https://www.overleaf.com/learn/latex/headers_and_footers}{Overleaf}.
+\subsection{Page numbering}
+to display Page X of Y:
+\begin{itemize}
+\item Import the package lastpage.
+\item Reference the current page with \textbackslash thepage
+\item Add ``\thepage of \textbackslash pageref\{LastPage\}" within a fancyhdr section call (\textbackslash cfoot or \textbackslash lfoot is popular).
+\end{itemize}
+\subsection{Timestamp your document}
+Warning: timestamps with Overleaf occur against their system clock which may not reflect your machine clock or physical time zone. \\
+Timestamps are useful when emailing documents to collaborators when not using a version control system. 
+\begin{itemize}
+	\item Import the datetime package.
+	\item \textbackslash currenttime\{\} (from datetime) provides the current time
+	\item \textbackslash today provides the date
+\end{itemize}
+\begin{verbatim}
+\rfoot{Compiled \currenttime{} on \today}
+\end{verbatim} 
+Example: \\
+Compiled \currenttime{} on \today \\
+Default is 24 hour time behavior.
+
+\subsection{Alternate way to include timestamps}
+The datetime2 package provides support for this.
+\begin{itemize}
+	\item Import datetime2.
+	\item Access a timestamp with \textbackslash DTMnow, will be formatted by system call. 
+	\item datetime and datetime2 conflict, so the latter package imported will be used.
+%	\item Example: \DTMnow
+\end{itemize}
+\subsection{Exercises}
+\begin{itemize}
+	\item Make a simple latex document with fancyheader. Place your name in the top right, date in the center, ``Homework 4" in the top left, and ``Math Club" in the bottom right.
+	\item Add a timestamp to a corner using datetime. Modify the timestamp to reflect only the date. 
+	\item Update your document to use datetime2
+\end{itemize}
+\section{Custom commands and Macros}
+\subsection{New commands}
+Useful for ``insert this chunk of text on a keyword call". 
+\begin{itemize}
+	\item new macros/commands follow the formula  \textbackslash newcommand\{\textbackslash Call \}\{Stuff to Insert \}
+	\item Then call the macro with \textbackslash Call.
+	\item Example: Blackboard notation: \textbackslash newcommand\{\textbackslash R\}\{\textbackslash mathbb\{R\}\}
+	%	 \newcommand{\R}{\mathbb{R}}
+	\item Custom commands can accept arguments! Use [n] to add n arguments. Access them in order with \#number (\#1, \#2, \ldots, \#n)
+	\item More examples: (My personal list, divided by application area)
+	\begin{verbatim}
+	% For derivatives
+	\newcommand{\deriv}[2]{\frac{\mathrm{d}#1}{\mathrm{d}#2}}
+	
+	% For partial derivatives
+	\newcommand{\pderiv}[2]{\frac{\partial #1}{\partial #2} }
+	
+	% Integral dx
+	\newcommand{\dx}{\mathrm{d}x}
+	\newcommand{\dd}{\mathrm{d}}
+	
+	% Alias for the Solution section header
+	\newcommand{\solution}{\textbf{\large Solution} \\}
+
+	% Probability commands: Expectation, Variance, Covariance, Bias
+	\newcommand{\E}{\mathrm{E}}
+	\newcommand{\Var}{\mathrm{Var}}
+	\newcommand{\Cov}{\mathrm{Cov}}
+	\newcommand{\Bias}{\mathrm{Bias}}
+	
+	% Real analysis commands: 
+	\newcommand{\limn}{$\lim_{n \to \infty}$}
+	\newcommand{\infx}{ \text{inf}_{x \in [x_{i-1}, x_i]} }
+	\newcommand{\supx}{ \text{sup}_{x \in [x_{i-1}, x_i]} }
+	\newcommand{\ingab}{$[a,b]$}
+	\newcommand{\limnn}{\ensuremath{\lim_{n \to \infty}}}
+	\newcommand{\R}{\ensuremath{\mathbb{R}}}
+	\newcommand{\N}{\ensuremath{\mathbb{N}}}
+	\newcommand{\Z}{\ensuremath{\mathbb{Z}}}
+	\newcommand{\C}{\ensuremath{\mathbb{C}}}
+	\newcommand{\inv}{\ensuremath{^{-1}}}
+	%Abstract Algebra Commands
+	\newcommand{\MR}{\mathbb{M}_2(\mathbb{R}}
+	\end{verbatim}
+\end{itemize}
+\subsection{Redefining calls}
+Some packages will set bindings. You can find these with a complier error when you try and bind a macro to it.
+\begin{itemize}
+	\item Use renewcommand in place of newcommand. 
+	\item If you want to save the old command (eg you need it elsewhere), use 
+	\begin{verbatim}
+	\let \newbinding\oldcommand
+	\end{verbatim}
+\end{itemize}
+\section{The many Math Environments of \LaTeXe}
+We'll add horizontal lines (\textbackslash hrule) to emphasize spacings. 
+\begin{description}
+	\item [\$... \$] inline math mode. Good for ``If $x \in Z$, then  $f(x) = \ldots$. 
+	\item [\$\$... \$\$] A tex (the base application for \LaTeX) primitive method for entering math mode. Don't use this, mentioned for completeness. 
+	\item [\textbackslash [ \textbackslash]] Shorthand method to enter display mode, a classic.
+	\item [Displaymath] The environment based way to get into display mode. Works like \textbackslash [ \textbackslash] but more to type.
+	\item[equation and equation*] A way to get numbered equations, adds a bit of vertical space compared to display mode, a better version is available with amsmath. Use * to suppress numbering. \hrule
+	\begin{equation}
+	f(x) = \int_0^1 \sum_{n=0}^\infty a_n(x) \mathrm{d} x
+	\end{equation}\hrule
+	\item [align and align*] Used for vertically aligning \& characters. Useful for systems of equations and demonstrating work. Use * to suppress numbering. Adds space before math.
+	\hrule
+	\begin{align}
+	f(x) & = \int_0^1 x^n \mathrm{d} x \\
+	& = \frac{1}{n+1} 1^{n+1} - 0 \\
+	& = \frac{1}{n+1}
+	\end{align}
+	\hrule
+	\item[aligned] Like align*, but without the vertical space above, but does not enter math mode for you. Less space from previous line.\
+	\hrule
+	\[
+	\begin{aligned}
+	f(x) & = \int_0^1 x^n \mathrm{d} x \\
+		 & = \frac{1}{n+1} 1^{n+1} - 0 \\
+   		 & = \frac{1}{n+1}
+	\end{aligned}
+	\]
+	\hrule
+	\item[eqnarray*] Like align, but worse with horizontal spacing. Don't use this. 
+	\item[gather and gather*] Provided by amsmath, center justifies all arguments. Use a \textbackslash \textbackslash
+	\hrule
+	\begin{gather}
+	a = b+1 \\
+	b = a - 1 \\
+	a-b-1 = 0 \implies q!
+	\end{gather}
+	\hrule
+\end{description}
+\section{Theorems, lemmas, and remarks}
+Accessible through amsthrm (AMS theorems). You can define axioms, theorems, lemmas, corollaries, remarks, examples, definitions, conjectures, or custom names. Proof environments are also accessible. \\
+
+\begin{enumerate}
+	\item Add \textbackslash newtheorem\{environment name \}\{Displayed Name\}. Numbering for multiple instances occurs, but does not support other types, so you get Definition 1, Definition 2, Lemma 1, lemma 2, corollary 1, lemma 3. 
+	\item A good naming convention to follow (to be consistent with standard latex usage) is to use lower case for environment names and Capitals for Display Names. 
+	\item If you want numbering (eg def 1, lemma 2, def 3, corollary 4), we need to modify the declaration. 
+	\begin{verbatim}
+	\newtheorem{theorem}{Theorem}
+	\newtheorem{remark}[theorem]{Remark}
+	\newtheorem{axiom}[theorem]{Axiom}
+	\end{verbatim}
+	\item To set the numbering into a section (so def 1 is def 1.1) and reset on section incrementing, change the initial declaration to
+	\begin{verbatim}
+	\newtheorem{theorem}{Theorem}[section]
+	\newtheorem{remark}[theorem]{Remark}
+	\newtheorem{axiom}[theorem]{Axiom}
+	\end{verbatim}
+	The convention here of placing the [] after the \{\} is contrary to standard use, to avoid confusion with the reference to an environment for numbering.
+	\item Call an environment as 
+	\begin{verbatim}
+	\begin{theorem}[My named theorem]
+	If 0 is a number, then \pi is awesome.
+	\end{theorem}
+	\end{verbatim}
+	\item You might want to follow your named environment with a proof.
+	\begin{verbatim}
+	\begin{proof}
+	The result follows from the imaginary Euler-Dedekind-Maruyama-Gauss-Newton
+	-Seidel-Laplace-Strogatz-Tau-Ramanujan-Galois-Cantor-Cauchy theorem.
+	\end{proof} 
+	\end{verbatim}
+	\begin{proof}
+	The result follows from the Euler-Dedekind-Maruyama-Gauss-Newton-Seidel-Laplace-Strogatz-Tau-Ramanujan-Galois-Cantor-Cauchy theorem.
+	\end{proof}
+\end{enumerate}
+The \href{https://math.ucsd.edu/~jeggers/latex/amsthdoc.pdf}{documentation for amsthrm} is quite readable.
+\section{Images}
+Image support is provided by the graphicx package. The graphic and graphics package are depreciated and should not be used. 
+\begin{enumerate}
+	\item Import the graphicx package.
+	\item To include an image, use \textbackslash includegraphics[]{path/to/file}
+	\item path/to/file supports relative and absolute imports. Relative imports are more stable than absolute imports (which should be avoided). The specific style is dependent on your operating system (windows vs linux style file paths). 
+	\item For Windows: the \textbackslash will convert your folder names to commands. Use / instead.
+	\item Graphicx supports literals for filepath names and can suppress wildcard searches. If you have Images/img entered as the filename, and your directory Images has img1 and img2, it will use the first one it finds. 
+	\item This search is quite useful! You can often drop file format suffixes from the file listings. If you have a date stamp in image file names, you can ignore the last few digits (be careful with this though). 
+\end{enumerate}
+Vector graphics are preferred for latex documents (where images are stored as collections of vectors, rather than pixels) as opposed to raster (pixel maps) images. 
+Supported file formats:
+\begin{itemize}
+	\item EPS (preferred) - encapsulated post scripts. LaTeX includes a utility called eps2pdf which handles eps files beautifully. Most graphics outputting technical programs have an option to output an eps file. 
+	\item PNG - portable network graphics. Very popular for websites, 
+	\item JPEG (avoid) - not recommended for scientific applications due to lossy compression, good for websites due to high compression. Requires jpeg2eps converter. 
+\end{itemize}
+Unsupported file formats:
+\begin{itemize}
+	\item svg - Scalable vector graphics format
+	\item HEIC - high efficiency image format
+	\item TIFF - tagged image file format. high resolution files with poor compression, popular with scanners and microscopy equipment. Legacy support is sometimes available. 
+\end{itemize}
+The mwe (minimum working example) package provides backend support for sample images. These are: \\
+\begin{itemize}
+	\item example-image-a
+	\item example-image-golden
+	\item example-grid-100x100pt
+	\item example-image-b
+	\item example-image-c
+	\item example-image
+\end{itemize}
+\noindent\includegraphics[width=5cm]{example-image-a}\qquad
+\includegraphics[width=5cm]{example-image-golden}\qquad  % \qquad for horizontal space
+\includegraphics[width=4cm]{example-grid-100x100pt}
+
+\includegraphics[height=4cm]{example-image-b} 
+\noindent\includegraphics[scale=0.5]{example-image-c} 
+\includegraphics[width=3.22cm]{example-image} 
+
+There are a few common options you will need:
+\begin{description}
+	\item[size] A scale factor (a float) for the image size. Default is 1
+	\item[angle] Rotation, 360 degree scale. Default is 0
+	\item[width] equals a unit (typically \#cm), sets image scale by width
+	\item[height]equals a unit (typically \#cm), sets image scale by width
+\end{description}
+If both height and width are set the aspect ratio is broken. Use size to avoid this. Example
+\begin{verbatim}
+\includegraphics[width=12cm, height=4cm]{example-grid-100x100pt}
+\end{verbatim}
+\begin{center}
+\includegraphics[width=12cm, height=4cm]{example-grid-100x100pt}
+\end{center}
+
+Useful for tuning plot sizes to fit into a specific spot with vector images (especially on posters).
+\section{Figures, tables, and tabular}
+\subsection{Figures}
+Figures are created with a figure environment.
+Figures are an example of a floating environment, \LaTeX{} places restrictions on where figures can go (figures can't be split across pages and there are 19 others you don't need to know). For more details see \href{https://tex.stackexchange.com/questions/39017/how-to-influence-the-position-of-float-environments-like-figure-and-table-in-lat}{this stackexchange post}. 
+\begin{itemize}
+	\item Within the environment, add \textbackslash centering to center the figure contents.
+	\item To change the position of a figure, pass an optional argument to the figure environment. There are 5 optional arguments:
+	\begin{enumerate}
+		\item[h] for inline placement
+		\item[!] for relax placement rules
+		\item[b] for bottom of page
+		\item[t] for top of page
+		\item[p] for place in a special place for floats (either a column or page at the end of the document
+	\end{enumerate}
+\item There is \emph{no} precedence in the order of float insertion. [!hpt] has the same effect as [pht!].
+\item Floats with a ! are sometimes called bang floats (as the \#! is called a she-bang or a hashbang, Unix is awesome like that).
+\item Figures can contain a caption, which will add the figure number. All figures should have a caption. To add a short caption (eg figure name), enter it as an optional argument to caption.
+\end{itemize} 
+\begin{verbatim}
+\begin{figure}[h!]
+\centering
+\includegraphics[width=3cm]{example-grid-100x100pt}
+\caption[Grid demo fig]{This is a caption for the sample figure}
+\end{figure}
+\end{verbatim}
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=3cm]{example-grid-100x100pt}
+	\caption[Grid demo fig]{This is a caption for the sample figure}
+\end{figure}
+\subsection{Tables}
+Tables behave like figures, but follow formatting convention rules for tables with regard to captions. The actual table itself is generated with a tabular environment. 
+\begin{itemize}
+	\item The tabular environment accepts a string that describes how to build columns. There are 4 common characters you can use:
+	\begin{itemize}
+		\item[$\vert$] (pipe) adds a vertical line
+		\item[l] left justify the column
+		\item[c] center justify
+		\item[r] right justify
+	\end{itemize}
+	\item To advance to the next cell, use an \&. To advance to the next line, use a \textbackslash\textbackslash. You are responsible for tracking the number of cells in your table and your current position in the table. 
+	\item Horizontal lines can be added with \textbackslash hline. Two hline calls produce a break in $\vert$ constructed lines. 
+\end{itemize}
+A simple table:
+\begin{verbatim}
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{c c}
+		a & $x^2$ \\
+		c & 23
+	\end{tabular}
+\caption[Sample table]{This is an example of a table. We can put inline math in tabular cells.}
+\end{verbatim}
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{c c}
+		a & $x^2$ \\
+		c & 23
+	\end{tabular}
+\caption[Sample table]{This is an example of a table. We can put inline math in tabular cells.}
+\end{table}
+We can make a slightly more complicated table to demonstrate these features
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{|l|c c r|} \hline
+		n & $x_n$ & $f(x_n)$ & $\epsilon_n$ \\  \hline \hline
+		1 & $12.2$ & $12.21$ & $0.01$ \\
+		2 & $12.3$ & $12.32$ & $0.12$ \\
+		3 & $12.4$ & $12.43$ & $0.23$ \\
+		\hline 
+	\end{tabular}
+	\caption[Advanced table]{This is a second example of a table. .}
+\end{table}
+\begin{verbatim}
+\begin{table}[h!]
+\centering
+\begin{tabular}{|l|c c r|} \hline
+n & $x_n$ & $f(x_n)$ & $\epsilon_n$ \\  \hline \hline
+1 & $12.2$ & $12.21$ & $0.01$ \\
+2 & $12.3$ & $12.32$ & $0.12$ \\
+3 & $12.4$ & $12.43$ & $0.23$ \\
+\hline 
+\end{tabular}
+\caption[Advanced table]{This is a second example of a table. .}
+\end{table}
+\end{verbatim}
+\section{References}
+\LaTeX supports 2 types of references: citations and labels. To reference an equation/figure/table/theorem/section/*environment, it needs to have a label. Labels are created with \textbackslash label\{label-key\}. A recommended naming scheme is a 3 letter key for each type of object: 
+\begin{itemize}
+	\item eqn for equation
+	\item thm for theorem
+	\item fig for figure
+	\item tbl for table
+	\item lem for lemma
+	\item rmk for remark
+	\item cor for corollary
+	\item prt for part
+	\item cha for chapter
+	\item sec for section
+	\item sbs for subsection
+	\item ssb for subsubsection
+\end{itemize}
+followed by a terse description of the object, separated by a colon. Many IDEs support dropdown text-completion for labels, but these are typically limited to $<25$ characters. Examples: thm:completeness-of-R, eqn:integral-minimizer, fig:x causes y to change. Spaces are allowed, the choice between spaces, dashes, and underscores is personal preference. Dashes are usually pretty easy to see, whereas spaces and underscores can be combined (is it 1 or 2 spaces/underscores?), especially if you're not using a monospace font in your editor.
+\begin{itemize}
+	\item Figure references should follow the caption. 
+	\item Table references should follow the caption.
+	\item Equation references (or align or gather) can go anywhere in the environment.
+	\item Theorem environment references can go anywhere in the environment. 
+\end{itemize}
+The caption call generates the label-able object in floats. Access a labeled object with \textbackslash ref\{\}. If no object is found, a \ref{} is returned. 
+
+Additionally, a table of contents can be printed with \textbackslash tableofcontents.
+\tableofcontents \label{toc}
+A list of figures can be generated with \textbackslash listoffigures.
+\listoffigures
+A list of tables can be generated with \textbackslash listoftables.
+\listoftables
+
+Only one call of each can be made per document. 
+\section{Abstract}
+Abstracts can be included with the abstract environment. This environment is part of the base latex distribution and requires no packages.
+\begin{verbatim}
+\begin{abstract}
+Place your abstract here.
+\end{abstract}
+\end{verbatim}
+\section{Including documents}
+There are 3 ways to include documents. All three of these methods are comparable with pdflatex. 
+\begin{enumerate}
+	\item \textbackslash include\{path/to/file.tex\} Dumps in the contents of file.tex at compile time. You need to compile the main document and not file.tex. \textbackslash include can be nested (file.tex can also have a \textbackslash include call).
+	\item \textbackslash input\{path/to/file\} behaves similar to \textbackslash include, but inserts a page break. Good for books with chapters. 
+	\item Use the pdfpages package. This allows you to insert pdf documents into your compiled document. This is particularly useful for joining PDF files from multiple programs. For example, Mathematica and Matlab have robust print methods to produce documents showing your code and the outputs. Other notebook style code editors (such as R markdown or Jupyter notebooks) produce PDF files you might want to write in their native languages, rather than attempt to recreate the cells in \LaTeX.
+\end{enumerate}
+\section{Including code snippets}
+For most popular languages, the listings and minted packages provides code import. 
+\begin{itemize}
+	\item listings is a highly customizable tool that can be finely tuned. 
+	\item Minted is good with default parameters. Minted is built on top of a python package called Pygments (like `pigments'), the minted package contains an API to interface with Pygments. You can install pygments easily with pip (the python package manager) with cmd if you have a python installation. Use ``pip install Pygments". 
+	\item If you are using a standalone install of \LaTeX{}, you will need to adjust your editor pdflatex call to include -shell-escape. My build command (in TeXStudio) looks like:
+\begin{verbatim}
+-synctex=1 -interaction=nonstopmode -shell-escape %.tex
+\end{verbatim}
+	\item Overleaf supports minted with no need to install anything.
+\end{itemize} 
+\subsection{Python}
+With listings only specifying python as the language.
+\lstinputlisting[language=python]{code/python.py}
+With minted only specifying python as the language.
+\inputminted{python}{code/python.py}
+\begin{verbatim}
+\lstinputlisting[language=python]{code/python.py}
+\inputminted{python}{code/python.py}
+\end{verbatim}
+\subsection{C}
+With listings only specifying C as the language.
+\lstinputlisting[language=C]{code/cdemo.c}
+With minted only specifying C as the language.
+\inputminted{C}{code/cdemo.c}
+\begin{verbatim}
+\lstinputlisting[language=C]{code/cdemo.c}
+\inputminted{C}{code/cdemo.c}
+\end{verbatim}
+\subsection{Matlab}
+There is a specific package matlab-prettifier built on top of listings for matlab code. We can specify the style as matlab-editor with an optional argument. 
+\lstinputlisting[style=matlab-editor]{code/Matlab.m}
+with Minted:
+\inputminted{Matlab}{code/Matlab.m}
+\begin{verbatim}
+\lstinputlisting[style=matlab-editor]{code/Matlab.m}
+\inputminted{Matlab}{code/Matlab.m}
+\end{verbatim}
+Listings is not currently under developement while minted has an active community. Installation aside, Minted is easier to use and has many more advanced features (we could spend an hour talking just about minted). You're encouraged to \href{http://tug.ctan.org/tex-archive/macros/latex/contrib/minted/minted.pdf}{read the documentation for minted} for more details. Minted supports captions, references/labels, can float code snippets, inline snippets, mixing hilighting (you can compare between multiple languages) and tables of contents for code floats. It's a very cool piece of software.
+
+Line numbering and boxing is supported by both listings and minted. 
+\begin{verbatim}
+\definecolor{bg}{rgb}{0.95,0.95,0.95} % define a nice color gray
+\begin{listing}[H]
+\inputminted[linenos=true, bgcolor=bg]{C}{code/cdemo.c}
+\caption{A simple C program.}
+\label{lst:c-demo}
+\end{listing}
+Listing \ref{lst:c-demo} contains a simple C program. 
+
+We can generate a list of all listings with minted:
+\listoflistings
+\end{verbatim}
+\definecolor{bg}{rgb}{0.95,0.95,0.95} % define a nice color gray
+\begin{listing}[H]
+\inputminted[linenos=true, bgcolor=bg]{C}{code/cdemo.c}
+\caption{A simple C program.}
+\label{lst:c-demo}
+\end{listing}
+Listing \ref{lst:c-demo} contains a simple C program. 
+
+We can generate a list of all listings with minted:
+\listoflistings
+
+We can even put \LaTeX{} markdown code in a file and get it to compile!
+\begin{verbatim}
+\begin{listing}[H]
+\begin{minted}[linenos=true, bgcolor=bg, mathescape]{python}
+# computes sum $\sum_1^k \frac{1}{k}$
+k = 12
+total = 0
+for x in range(k):  # Loop over the first k integers
+total += 1/x  # Increment our total
+print(total)
+\end{minted}
+\caption[Minted is Awesome]{Our python file has \LaTeX{} in the comments!}
+\end{listing}
+\end{verbatim}
+
+\begin{listing}[H]
+\begin{minted}[linenos=true, bgcolor=bg, mathescape]{python}
+# computes sum $\sum_1^k \frac{1}{k}$
+k = 12
+total = 0
+for x in range(k):  # Loop over the first k integers
+    total += 1/x  # Increment our total
+print(total)
+\end{minted}
+\caption[Minted is Awesome]{Our python file has \LaTeX{} in the comments!}
+\end{listing}
+
+\section{Bibliographies}
+We can create citations with \textbackslash cite\{\}. More advanced tools are available. In \LaTeX, a .bib file format denotes bibliographic information. A simple one looks like this:
+\begin{verbatim}
+@article{Finch1963,
+author = {Finch, P D},
+doi = {10.1017/S1446788700028378},
+issn = {14468107},
+journal = {Journal of the Australian Mathematical Society},
+number = {3},
+pages = {351--358},
+title = {{A limit theorem for Markov chains with continuous state space}},
+url = {https://doi.org/10.1017/S1446788700028378},
+volume = {3},
+year = {1963}
+}\end{verbatim}
+The first line is called the citation key.
+We can attach a bibliography file with the \textbackslash bibliography\{file-name\} command. The cite command can accept multiple keys (comma separated) such as\cite{Finch1963, Ludwig1975}. We can make a reference to this citation with \textbackslash cite\{Finch1963\} which produces \cite{Finch1963}. A good IDE will provide you a list of citation keys in the declared bibliography. 
+\begin{itemize}
+	\item The first line is called the citation key.
+	\item We can attach a bibliography file with the \textbackslash bibliography\{file-name\} command. 
+	\item We can make a reference to this citation with \textbackslash cite\{Finch1963\} which produces \cite{Finch1963}. 
+	\item A good IDE will provide you a list of citation keys in the declared bibliography. 
+	\item We need to declare a bibliography style (\textbackslash bibliographystyle\{\}) that provides pdflatex with the formatting information to use. Options include plain, acm, alpha, acm, and siam. This example uses alpha.
+	\item if you change the style and it doesn't update, delete the extra files generated by bibtex and the aux file. This will provide a clean slate for the compiler's build sequence. 
+\end{itemize}
+\subsection{Bibtex}
+This bibliography is generated with
+\begin{verbatim}
+\bibliographystyle{alpha}
+\bibliography{demo_bib}  % Omit file suffix
+\end{verbatim}
+\bibliographystyle{alpha}
+\bibliography{demo_bib}  % Omit file suffix
+
+For most classes this will be enough. This uses a process called bibtex (bibtex is the executed file, bibber is the backend). Bibtex is simple to use, but lacks advanced features. Natbib is a depreciated alternative, but Biblatex is replacing both of them.
+\subsection{Biblatex}
+Biblatex is a more advanced package.
+
+\section{SI Unit formatting}
+The package SIunitX is a great package designed for formatting scientific calculations (chemistry, physics, etc). The general formatting is
+\textbackslash SI \{value (in 1e-3 style scientific notation)\}\{Units\}. To declare a unit, use \textbackslash unit-name. for a per-second unit structure, add \textbackslash per \textbackslash unit. We can get values like: \SI{1e-4}{\meter\per\second}. Read the docs here.
+
+\section{External referencing}
+We've talked about internal referencing, but what about external referencing? Wouldn't it be great if you could embed an email address (or a click-and-mail style event) or a website link in your document? The hyperref package is your answer. There are 2 quick tools:
+\begin{itemize}
+	\item href provides an embeded style reference of the formula \textbackslash href\{embedded link or action\}\{displayed text\}
+	\begin{enumerate}
+		\item To embed an email use mailto:user@server.web, the mailto: prefix determines the action
+		\item To embed a link, just paste in the link.
+	\end{enumerate}
+\item \textbackslash url\{\} is a lightweight version of href that does not hide your link. Great if you want to link to \url{google.com}. Less good if you want \url{https://en.wikipedia.org/wiki/Hyperlink#/media/File:Wiki-linking.png}
+\end{itemize}
+Read the \href{http://mirror.utexas.edu/ctan/macros/latex/contrib/hyperref/doc/manual.pdf}{hyperref documentation here} and the \href{https://www.overleaf.com/learn/latex/hyperlinks}{overleaf tutorial here}.
+\end{document}
+
+
+
+
+
+
+

@@ -1,0 +1,29 @@
+\BOOKMARK [1][-]{section.1}{File types}{}% 1
+\BOOKMARK [1][-]{section.2}{The build sequence}{}% 2
+\BOOKMARK [1][-]{section.3}{Fancy headers and footers}{}% 3
+\BOOKMARK [2][-]{subsection.3.1}{Formatting}{section.3}% 4
+\BOOKMARK [2][-]{subsection.3.2}{Page numbering}{section.3}% 5
+\BOOKMARK [2][-]{subsection.3.3}{Timestamp your document}{section.3}% 6
+\BOOKMARK [2][-]{subsection.3.4}{Alternate way to include timestamps}{section.3}% 7
+\BOOKMARK [2][-]{subsection.3.5}{Exercises}{section.3}% 8
+\BOOKMARK [1][-]{section.4}{Custom commands and Macros}{}% 9
+\BOOKMARK [2][-]{subsection.4.1}{New commands}{section.4}% 10
+\BOOKMARK [2][-]{subsection.4.2}{Redefining calls}{section.4}% 11
+\BOOKMARK [1][-]{section.5}{The many Math Environments of LaTeX2e}{}% 12
+\BOOKMARK [1][-]{section.6}{Theorems, lemmas, and remarks}{}% 13
+\BOOKMARK [1][-]{section.7}{Images}{}% 14
+\BOOKMARK [1][-]{section.8}{Figures, tables, and tabular}{}% 15
+\BOOKMARK [2][-]{subsection.8.1}{Figures}{section.8}% 16
+\BOOKMARK [2][-]{subsection.8.2}{Tables}{section.8}% 17
+\BOOKMARK [1][-]{section.9}{References}{}% 18
+\BOOKMARK [1][-]{section.10}{Abstract}{}% 19
+\BOOKMARK [1][-]{section.11}{Including documents}{}% 20
+\BOOKMARK [1][-]{section.12}{Including code snippets}{}% 21
+\BOOKMARK [2][-]{subsection.12.1}{Python}{section.12}% 22
+\BOOKMARK [2][-]{subsection.12.2}{C}{section.12}% 23
+\BOOKMARK [2][-]{subsection.12.3}{Matlab}{section.12}% 24
+\BOOKMARK [1][-]{section.13}{Bibliographies}{}% 25
+\BOOKMARK [2][-]{subsection.13.1}{Bibtex}{section.13}% 26
+\BOOKMARK [2][-]{subsection.13.2}{Biblatex}{section.13}% 27
+\BOOKMARK [1][-]{section.14}{SI Unit formatting}{}% 28
+\BOOKMARK [1][-]{section.15}{External referencing}{}% 29

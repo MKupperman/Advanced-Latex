@@ -1,0 +1,7 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{x} \PYG{p}{=} \PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{for} \PYG{l+s}{y} \PYG{l+s}{=} \PYG{l+s}{1:n}
+	\PYG{n}{x} \PYG{p}{=} \PYG{n}{x} \PYG{o}{+} \PYG{l+m+mi}{1}
+\PYG{k}{end}
+\PYG{n+nb}{disp}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+\end{Verbatim}

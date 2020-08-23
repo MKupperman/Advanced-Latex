@@ -1,0 +1,8 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{c+c1}{\PYGZsh{} computes sum $\sum_1^k \frac{1}{k}$}
+\PYG{n}{k} \PYG{o}{=} \PYG{l+m+mi}{12}
+\PYG{n}{total} \PYG{o}{=} \PYG{l+m+mi}{0}
+\PYG{k}{for} \PYG{n}{x} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{k}\PYG{p}{):}  \PYG{c+c1}{\PYGZsh{} Loop over the first k integers}
+    \PYG{n}{total} \PYG{o}{+=} \PYG{l+m+mi}{1}\PYG{o}{/}\PYG{n}{x}  \PYG{c+c1}{\PYGZsh{} Increment our total}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{total}\PYG{p}{)}
+\end{Verbatim}

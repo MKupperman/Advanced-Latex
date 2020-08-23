@@ -1,0 +1,14 @@
+\begin{thebibliography}{Lud75}
+
+\bibitem[Fin63]{Finch1963}
+P~D Finch.
+\newblock {A limit theorem for Markov chains with continuous state space}.
+\newblock {\em Journal of the Australian Mathematical Society}, 3(3):351--358,
+  1963.
+
+\bibitem[Lud75]{Ludwig1975}
+Donald Ludwig.
+\newblock {Persistence of Dynamical Systems under Random Perturbations}.
+\newblock {\em SIAM Review}, 17(4):605--640, 1975.
+
+\end{thebibliography}
